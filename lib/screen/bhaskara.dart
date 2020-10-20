@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:calc_bhaskara/componets/contas.dart';
+import 'dart:math';
 
 Contas contas = new Contas();
 
-String msgDelta = "";
-String msgX1 = "";
-String msgX2 = "";
+String msgDelta;
+String msgX1;
+String msgX2;
+String msgRaiz;
 
 class Bhaskara extends StatefulWidget {
   @override
@@ -14,6 +16,20 @@ class Bhaskara extends StatefulWidget {
 }
 
 class BhaskaraState extends State<Bhaskara> {
+
+  FocusNode myFocusNode;
+
+  @override
+  void initState(){
+    super.initState();
+    myFocusNode = FocusNode();
+  }
+
+  @override
+  void dispose(){
+    myFocusNode.dispose();
+    super.dispose();
+  }
 
 
   final TextEditingController _aController = TextEditingController();
@@ -39,14 +55,15 @@ class BhaskaraState extends State<Bhaskara> {
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 24.0),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24.0),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 16.0),
               child: TextField(
                 controller: _aController,
                 autofocus: true,
+                focusNode: myFocusNode,
                 style: TextStyle(
                   fontSize: 18.0,
                 ),
@@ -56,7 +73,9 @@ class BhaskaraState extends State<Bhaskara> {
                   ),
                   hintText: 'Digite um numero',
                   labelText: 'Valor de A',
+                  counterText: "",
                 ),
+                maxLength: 3,
                 keyboardType: TextInputType.number,
               ),
             ),
@@ -70,7 +89,9 @@ class BhaskaraState extends State<Bhaskara> {
                   ),
                   hintText: 'Digite um numero',
                   labelText: 'Valor de B',
+                  counterText: "",
                 ),
+                maxLength: 3,
                 style: TextStyle(
                   fontSize: 18.0,
                 ),
@@ -87,7 +108,9 @@ class BhaskaraState extends State<Bhaskara> {
                   ),
                   hintText: 'Digite um numero',
                   labelText: 'Valor de C',
+                  counterText: "",
                 ),
+                maxLength: 3,
                 style: TextStyle(
                   fontSize: 18.0,
                 ),
@@ -127,8 +150,13 @@ class BhaskaraState extends State<Bhaskara> {
               style: TextStyle(
                 fontSize: 24.0,
               ),
-              overflow: TextOverflow.visible,
+            ),
+            Text(
+              msgRaiz,
+              style: TextStyle(
+                fontSize: 24.0,
               ),
+            ),
           ],
         ),
       ),
@@ -136,6 +164,8 @@ class BhaskaraState extends State<Bhaskara> {
   }
 
   void _novo(){
+    FocusScope.of(context).requestFocus(myFocusNode);
+
     setState((){
       _aController.text = "";
       _bController.text = "";
@@ -160,18 +190,35 @@ class BhaskaraState extends State<Bhaskara> {
 
       double delta;
 
-      delta = contas.delta(vA,vB,vC);
-
-      if(delta < 0){
-        msgDelta = "Delta: não existem raízes reais";
+      if(vA == null || vB == null || vC == null){
+        int flt;
+        List valores = [vA,vB,vC];
+        for(int i = 0; i<=valores.length;i++){
+          if(valores[i] == null){
+            flt++;
+          }
+        }
+        msgDelta = 'Falta $flt valores';
       }else{
-        x1 = contas.bhaskara1(vA, vB, delta);
-        x2 = contas.bhaskara2(vA, vB, delta);
+        delta = contas.delta(vA,vB,vC);
 
-        msgDelta = "Delta: $delta";
-        msgX1 = "X¹: $x1";
-        msgX2 = "X²: $x2";
+        if(delta < 0){
+          msgDelta = "Delta: $delta";
+          msgRaiz = "Não existem raízes reais";
+        }else{
+          x1 = contas.bhaskara1(vA, vB, delta);
+          x2 = contas.bhaskara2(vA, vB, delta);
+
+          x1.roundToDouble();
+          x2.round();
+
+          msgDelta = "Delta: $delta";
+          msgX1 = "X¹: $x1";
+          msgX2 = "X²: $x2";
+        }
       }
+
+
 
       SystemChannels.textInput.invokeMethod('TextInput.hide');
     });
