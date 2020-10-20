@@ -5,10 +5,10 @@ import 'dart:math';
 
 Contas contas = new Contas();
 
-String msgDelta;
-String msgX1;
-String msgX2;
-String msgRaiz;
+String msgDelta = "";
+String msgX1 = "";
+String msgX2 = "";
+String msgRaiz = "";
 
 class Bhaskara extends StatefulWidget {
   @override
@@ -191,15 +191,7 @@ class BhaskaraState extends State<Bhaskara> {
       double delta;
 
       if(vA == null || vB == null || vC == null){
-//        int flt;
-//        List valores = [vA,vB,vC];
-//        for(int i = 0; i<=valores.length;i++){
-//          if(valores[i] == null){
-//            flt++;
-//          }
-//        }
-//        msgDelta = 'Falta $flt valores';
-      msgDelta = "Digite Todos os Valores";
+        msgDelta = "Por Favor, Digite Todos os Valores";
       }else{
         delta = contas.delta(vA,vB,vC);
 
