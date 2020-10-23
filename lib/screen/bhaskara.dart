@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:calc_bhaskara/componets/contas.dart';
-import 'dart:math';
+import 'package:calc_bhaskara/rule/validation.dart';
 
 Contas contas = new Contas();
+Validation validate = new Validation();
 
 String msgDelta = "";
 String msgX1 = "";
@@ -134,6 +135,12 @@ class BhaskaraState extends State<Bhaskara> {
               ],
             ),
             Text(
+              msgRaiz,
+              style: TextStyle(
+                fontSize: 24.0,
+              ),
+            ),
+            Text(
               msgDelta,
               style: TextStyle(
                 fontSize: 24.0,
@@ -147,12 +154,6 @@ class BhaskaraState extends State<Bhaskara> {
             ),
             Text(
               msgX2,
-              style: TextStyle(
-                fontSize: 24.0,
-              ),
-            ),
-            Text(
-              msgRaiz,
               style: TextStyle(
                 fontSize: 24.0,
               ),
@@ -171,6 +172,7 @@ class BhaskaraState extends State<Bhaskara> {
       _bController.text = "";
       _cController.text = "";
 
+      msgRaiz = "";
       msgX2 = "";
       msgDelta = "";
       msgX1 = "";
@@ -181,6 +183,8 @@ class BhaskaraState extends State<Bhaskara> {
 
   void _calc(String a, String b, String c) {
     setState(() {
+      msgRaiz = "";
+
       double x1;
       double x2;
 
@@ -191,7 +195,9 @@ class BhaskaraState extends State<Bhaskara> {
       double delta;
 
       if(vA == null || vB == null || vC == null){
-        msgDelta = "Por Favor, Digite Todos os Valores";
+        String ttl;
+        ttl = validate.validate(vA, vB, vC);
+        msgRaiz = "$ttl";
       }else{
         delta = contas.delta(vA,vB,vC);
 
