@@ -134,6 +134,19 @@ class BhaskaraState extends State<Bhaskara> {
                 ),
               ],
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ButtonTheme(
+                  minWidth: 184.0,
+                  child: RaisedButton(
+                    child: Text('Mostrar Formula'),
+                    onPressed: () => _mostrar(),
+                    color: Colors.white54,
+                  ),
+                ),
+              ],
+            ),
             Text(
               msgRaiz,
               style: TextStyle(
@@ -221,6 +234,10 @@ class BhaskaraState extends State<Bhaskara> {
 
       SystemChannels.textInput.invokeMethod('TextInput.hide');
     });
+
+  }
+
+  void _mostrar(){
 
   }
 }
